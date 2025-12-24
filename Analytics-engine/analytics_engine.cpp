@@ -4,6 +4,13 @@
 #include <vector>
 #include <ctime>
 #include "config.h"
+#include <thread>
+#include "thread_safe_queue.h"
+#include <atomic>
+#include "logger.h"
+
+
+
 
 
 using namespace std;
@@ -15,6 +22,8 @@ struct StorageEvent {
     long timestamp;
     int size_mb;
 };
+ThreadSafeQueue<StorageEvent> eventQueue;
+atomic<bool> shuttingDown(false);
 
 
 
@@ -66,27 +75,58 @@ void printRecommendations() {
         }
     }
 }
-
-
-
-int main() {
+void readerThread() {
     StorageEvent event;
-    loadConfig("E:/Real time Cloud Storage Optimizer/config/config.txt");
- 
-
 
     while (cin >> event.file_id
                >> event.event_type
                >> event.timestamp
                >> event.size_mb) {
-        processEvent(event);
-        printAnalytics();
-        printRecommendations();
-        }
-        
-    
-    
-
-    return 0;
+        eventQueue.push(event);
     }
+
+    shuttingDown = true;
+    eventQueue.close();
+}
+
+void workerThread() {
+    int count = 0;
+    StorageEvent event;
+
+    while (eventQueue.pop(event)) {
+        processEvent(event);
+        count++;
+
+        if (count % PRINT_EVERY_N_EVENTS == 0) {
+            printAnalytics();
+            printRecommendations();
+        }
+    }
+
+    cout << "\nWorker exiting — no more events.\n";
+}
+
+
+
+int main() {
+    try {
+        loadConfig("../config/config.txt");
+    }
+    catch (const std::exception& ex) {
+        Logger::instance().log(ERROR, ex.what());
+        return 1;
+    }
+
+    Logger::instance().setLevel(INFO);
+    Logger::instance().enableFile("analytics.log");
+
+    Logger::instance().log(INFO, "Analytics Engine started");
+
+    std::thread reader(readerThread);
+    std::thread worker(workerThread);
+
+    reader.join();
+    worker.join();
+}
+
 
