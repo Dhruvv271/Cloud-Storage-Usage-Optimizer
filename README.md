@@ -18,3 +18,16 @@ and distributed deployment are intentionally excluded from the MVP.
 - Files accessed fewer than 3 times are classified as cold
 - Cold files are recommended for archival storage
 - Cost savings are estimated using tiered storage pricing
+## HTTP API Server
+- GET /hello – Health check.
+- POST /event – Submit storage events in JSON format.
+- GET /analytics – Retrieve file analytics as JSON.
+- GET /recommendations – Retrieve optimization recommendations as JSON.
+- GET /shutdown – Gracefully stop the server and worker threads.
+- Supports CORS for frontend access.
+## Web dashboard
+- Submit events via a form.
+- View analytics and recommendations dynamically.
+- Auto-refreshes every 5 seconds.
+## Logging 
+- Records server start, events received, worker thread lifecycle, and errors.
