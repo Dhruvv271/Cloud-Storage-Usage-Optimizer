@@ -1,5 +1,5 @@
 # Cloud Storage Usage Optimizer
-Have to fix the Dashboard file for "Getting Recommendations" on the webpage, though its working on the terminal when you run the server. 
+Note: Have to fix the Dashboard file for "Getting Recommendations" on the webpage, though its working on the terminal when you run the server. 
 Work in progress
 ## MVP Scope
 
@@ -32,3 +32,9 @@ and distributed deployment are intentionally excluded from the MVP.
 - Auto-refreshes every 5 seconds.
 ## Logging 
 - Records server start, events received, worker thread lifecycle, and errors.
+## Setup and Testing
+1) Clone the repository into your local system.
+2) Ensure you have a C++17 compatible compiler and include nlohmann/JSON and cpp-htplib in your project.
+3) Compile the project 
+4) Run the Server.
+5) Open the web dashboard using "Dashboard.HTML" and submit storage events and get analytics and recommendations accordingly.
