@@ -45,5 +45,5 @@ void loadConfig(const std::string& path) {
     require(COLD_STORAGE_COST > 0, "COLD_STORAGE_COST must be > 0");
     require(PRINT_EVERY_N_EVENTS > 0, "PRINT_EVERY_N_EVENTS must be > 0");
 
-    std::cout << "Config loaded successfully ✔️\n";
+    std::cout << "Config loaded successfully\n";
 }
